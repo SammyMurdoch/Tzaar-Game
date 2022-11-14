@@ -46,16 +46,25 @@ def stack_piece(start, end, nodes, neighbours):
     return nodes, neighbours
 
 
-piece_data = {"W-Tzaar": 6, "W-Tzaara": 9, "W-Tott": 15, "B-Tzaar": 6, "B-Tzaara": 9, "B-Tott": 15}
+def get_valid_moves(board, neighbours, node, target_colour):
+    valid_moves = []
+
+    if board[node][0] is not None:
+        for neighbour in neighbours[node]:
+            if neighbour is not None:
+                if board[neighbour][0][1] == target_colour:
+                    valid_moves.append(neighbour)
+
+    return valid_moves
+
+
+piece_data = {("W-Tzaar", "W"): 6, ("W-Tzaara", "W"): 9, ("W-Tott", "W"): 15, ("B-Tzaar", "B"): 6, ("B-Tzaara", "B"): 9, ("B-Tott", "B"): 15}
 directions = [(-1, -1), (-1, 0), (0, 1), (1, 1), (1, 0), (0, -1)]
 
 board, neighbours = generate_board_dict(piece_data, directions)
 
-print(neighbours)
+# board, neighbours = move_piece((0, 1), (0, 0), board, neighbours)
+# board, neighbours = stack_piece((0, 2), (0, 3), board, neighbours)
 
-board, neighbours = move_piece((0, 1), (0, 0), board, neighbours)
-board, neighbours = stack_piece((0, 2), (0, 3), board, neighbours)
-
-print(neighbours)
-
-print(neighbours[(0, 2)])
+print(get_valid_moves(board, neighbours, (0, 0), "W"))
+print(get_valid_moves(board, neighbours, (0, 0), "B"))
