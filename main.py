@@ -2,6 +2,14 @@ import random
 from numpy import *
 
 
+def generate_connections(node, nodes):
+    directions = [(-1, -1), (-1, 0), (0, -1), (0, 1), (1, 0), (1, 1)]
+
+    connections = [(node[0] + dir[0], node[1] + dir[1]) for dir in directions if (node[0] + dir[0], node[1] + dir[1]) in nodes]
+
+    return connections
+
+
 def generate_board_dict(piece_data, side_length=5):
     max_row_length = 2 * side_length - 1
 
@@ -11,7 +19,9 @@ def generate_board_dict(piece_data, side_length=5):
     piece_order = [key for key, value in piece_data.items() for i in range(value)]
     random.shuffle(piece_order)
 
-    node_data = [[piece, 1] for piece in piece_order]
+    connection_data = [generate_connections(node, board_keys) for node in board_keys]
+
+    node_data = [[piece, 1, connection_data[i]] for i, piece in enumerate(piece_order)]
 
     board = dict(zip(board_keys, node_data))
 
