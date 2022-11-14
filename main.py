@@ -26,7 +26,9 @@ def generate_board_dict(piece_data, directions, side_length=5):
     return node_dict, neighbour_dict
 
 
-def move_piece(start, end, nodes, neighbours):
+def move_piece(start, end, nodes, neighbours, piece_data):
+    piece_data[nodes[end][0]] -= 1
+
     nodes[end] = nodes[start]
     nodes[start] = [None, 0]
 
@@ -34,19 +36,19 @@ def move_piece(start, end, nodes, neighbours):
         if neighbour is not None:
             neighbours[neighbour][(d+3) % 6] = neighbours[start][(d+3) % 6]
 
-    return nodes, neighbours
+    return nodes, neighbours, piece_data
 
 
-def stack_piece(start, end, nodes, neighbours):
+def stack_piece(start, end, nodes, neighbours, piece_data):
     stack_height = nodes[start][1]
 
-    nodes, neighbours = move_piece(start, end, nodes, neighbours)
+    nodes, neighbours, piece_data = move_piece(start, end, nodes, neighbours, piece_data)
     nodes[end][1] += stack_height
 
-    return nodes, neighbours
+    return nodes, neighbours, piece_data
 
 
-def get_valid_moves(board, neighbours, node, target_colour):
+def get_valid_target_nodes(board, neighbours, node, target_colour):
     valid_moves = []
 
     if board[node][0] is not None:
@@ -63,8 +65,14 @@ directions = [(-1, -1), (-1, 0), (0, 1), (1, 1), (1, 0), (0, -1)]
 
 board, neighbours = generate_board_dict(piece_data, directions)
 
-# board, neighbours = move_piece((0, 1), (0, 0), board, neighbours)
-# board, neighbours = stack_piece((0, 2), (0, 3), board, neighbours)
+print(board)
 
-print(get_valid_moves(board, neighbours, (0, 0), "W"))
-print(get_valid_moves(board, neighbours, (0, 0), "B"))
+board, neighbours, piece_data = move_piece((0, 1), (0, 0), board, neighbours, piece_data)
+board, neighbours, piece_data = stack_piece((0, 3), (0, 4), board, neighbours, piece_data)
+
+print(board)
+
+# print(get_valid_target_nodes(board, neighbours, (0, 2), "W"))
+# print(get_valid_target_nodes(board, neighbours, (0, 2), "B"))
+
+print(piece_data)
