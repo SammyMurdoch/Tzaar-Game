@@ -49,6 +49,7 @@ def stack_piece(start, end, nodes, neighbours, piece_data):
 
 
 def get_valid_target_nodes(board, neighbours, node, target_colour):
+    print(node)
     valid_moves = []
 
     if board[node][0] is not None:
@@ -60,19 +61,58 @@ def get_valid_target_nodes(board, neighbours, node, target_colour):
     return valid_moves
 
 
-piece_data = {("W-Tzaar", "W"): 6, ("W-Tzaara", "W"): 9, ("W-Tott", "W"): 15, ("B-Tzaar", "B"): 6, ("B-Tzaara", "B"): 9, ("B-Tott", "B"): 15}
+def sub_turn(board, neighbours, piece_data, target_colour, player):
+    print("What is your starting node?")
+    start = eval(input())
+    print(start, type(start))
+    print("Your valid target nodes are:", get_valid_target_nodes(board, neighbours, start, target_colour))
+
+    print("What node do you want to move to?")
+    end = eval(input())
+
+    if target_colour == player:
+        nodes, neighbours, piece_data = move_piece(start, end, board, neighbours, piece_data)
+
+    else:
+        nodes, neighbours, piece_data = stack_piece(start, end, board, neighbours, piece_data)
+
+    return nodes, neighbours, piece_data
+
+
+def turn(board, neighbours, piece_data, player):
+    print("First move: Take")
+
+    nodes, neighbours, piece_data = sub_turn(board, neighbours, piece_data, (player+1)%2, player)
+
+    print(board)
+
+    print("Second Move: Take, Stack or Pass")
+    second_move = input("Take: 0, Stack: 1, Pass: 2\n")
+
+    if second_move == "0":
+        nodes, neighbours, piece_data = sub_turn(board, neighbours, piece_data, (player+1)%2, player)
+
+    elif second_move == "1":
+        nodes, neighbours, piece_data = sub_turn(board, neighbours, piece_data, player, player)
+
+    print(board)
+
+    return nodes, neighbours, piece_data
+
+
+piece_data = {("W-Tzaar", 0): 6, ("W-Tzaara", 0): 9, ("W-Tott", 0): 15, ("B-Tzaar", 1): 6, ("B-Tzaara", 1): 9, ("B-Tott", 1): 15}
 directions = [(-1, -1), (-1, 0), (0, 1), (1, 1), (1, 0), (0, -1)]
 
 board, neighbours = generate_board_dict(piece_data, directions)
 
+# board, neighbours, piece_data = move_piece((0, 1), (0, 0), board, neighbours, piece_data)
+# board, neighbours, piece_data = stack_piece((0, 3), (0, 4), board, neighbours, piece_data)
+
+# print(get_valid_target_nodes(board, neighbours, (0, 2), 0))
+# print(get_valid_target_nodes(board, neighbours, (0, 2), 1))
+
+#
+# print(neighbours)
+
 print(board)
-
-board, neighbours, piece_data = move_piece((0, 1), (0, 0), board, neighbours, piece_data)
-board, neighbours, piece_data = stack_piece((0, 3), (0, 4), board, neighbours, piece_data)
-
-print(board)
-
-# print(get_valid_target_nodes(board, neighbours, (0, 2), "W"))
-# print(get_valid_target_nodes(board, neighbours, (0, 2), "B"))
-
-print(piece_data)
+turn(board, neighbours, piece_data, 0)
