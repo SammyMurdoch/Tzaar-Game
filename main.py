@@ -64,7 +64,7 @@ def get_valid_target_nodes(board, neighbours, node, target_colour):
 def sub_turn(board, neighbours, piece_data, target_colour, player):
     print("What is your starting node?")
     start = eval(input())
-    print(start, type(start))
+
     print("Your valid target nodes are:", get_valid_target_nodes(board, neighbours, start, target_colour))
 
     print("What node do you want to move to?")
@@ -82,7 +82,7 @@ def sub_turn(board, neighbours, piece_data, target_colour, player):
 def turn(board, neighbours, piece_data, player):
     print("First move: Take")
 
-    nodes, neighbours, piece_data = sub_turn(board, neighbours, piece_data, (player+1)%2, player)
+    nodes, neighbours, piece_data = sub_turn(board, neighbours, piece_data, (player+1) % 2, player)
 
     print(board)
 
@@ -90,7 +90,7 @@ def turn(board, neighbours, piece_data, player):
     second_move = input("Take: 0, Stack: 1, Pass: 2\n")
 
     if second_move == "0":
-        nodes, neighbours, piece_data = sub_turn(board, neighbours, piece_data, (player+1)%2, player)
+        nodes, neighbours, piece_data = sub_turn(board, neighbours, piece_data, (player+1) % 2, player)
 
     elif second_move == "1":
         nodes, neighbours, piece_data = sub_turn(board, neighbours, piece_data, player, player)
@@ -100,10 +100,29 @@ def turn(board, neighbours, piece_data, player):
     return nodes, neighbours, piece_data
 
 
+def check_take_possible(board, neighbours, player):
+    for node in neighbours:
+        if len(get_valid_target_nodes(board, neighbours, node, (player + 1) % 2)) > 0:
+            return True
+
+    return False
+
+
+def check_game_end(board, neighbours, piece_data, player): # TODO test this
+    if 0 in piece_data.values():
+        return True
+
+    elif not check_take_possible(board, neighbours, player):
+        return True
+
+    return False
+
+
 piece_data = {("W-Tzaar", 0): 6, ("W-Tzaara", 0): 9, ("W-Tott", 0): 15, ("B-Tzaar", 1): 6, ("B-Tzaara", 1): 9, ("B-Tott", 1): 15}
 directions = [(-1, -1), (-1, 0), (0, 1), (1, 1), (1, 0), (0, -1)]
 
 board, neighbours = generate_board_dict(piece_data, directions)
+
 
 # board, neighbours, piece_data = move_piece((0, 1), (0, 0), board, neighbours, piece_data)
 # board, neighbours, piece_data = stack_piece((0, 3), (0, 4), board, neighbours, piece_data)
@@ -111,8 +130,7 @@ board, neighbours = generate_board_dict(piece_data, directions)
 # print(get_valid_target_nodes(board, neighbours, (0, 2), 0))
 # print(get_valid_target_nodes(board, neighbours, (0, 2), 1))
 
-#
-# print(neighbours)
-
 print(board)
-turn(board, neighbours, piece_data, 0)
+#turn(board, neighbours, piece_data, 0)
+
+print(neighbours)
