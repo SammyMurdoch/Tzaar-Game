@@ -49,7 +49,6 @@ def stack_piece(start, end, nodes, neighbours, piece_data):
 
 
 def get_valid_target_nodes(board, neighbours, node, target_colour):
-    print(node)
     valid_moves = []
 
     if board[node][0] is not None:
@@ -79,25 +78,34 @@ def sub_turn(board, neighbours, piece_data, target_colour, player):
     return nodes, neighbours, piece_data
 
 
-def turn(board, neighbours, piece_data, player):
+def turn(board, neighbours, piece_data, player, start=False):
+    if check_game_end(board, neighbours, piece_data, player):
+        return board, neighbours, piece_data, (player + 1) % 2
+
     print("First move: Take")
 
     nodes, neighbours, piece_data = sub_turn(board, neighbours, piece_data, (player+1) % 2, player)
 
-    print(board)
+    if check_game_end(board, neighbours, piece_data, player):
+        return nodes, neighbours, piece_data, player
 
-    print("Second Move: Take, Stack or Pass")
-    second_move = input("Take: 0, Stack: 1, Pass: 2\n")
+    if not start:
+        print("Second Move: Take, Stack or Pass")
+        second_move = input("Take: 0, Stack: 1, Pass: 2\n")
 
-    if second_move == "0":
-        nodes, neighbours, piece_data = sub_turn(board, neighbours, piece_data, (player+1) % 2, player)
+        if second_move == "0":
+            nodes, neighbours, piece_data = sub_turn(board, neighbours, piece_data, (player+1) % 2, player)
 
-    elif second_move == "1":
-        nodes, neighbours, piece_data = sub_turn(board, neighbours, piece_data, player, player)
+            if check_game_end(board, neighbours, piece_data, player):
+                return nodes, neighbours, piece_data, player
 
-    print(board)
+        elif second_move == "1":
+            nodes, neighbours, piece_data = sub_turn(board, neighbours, piece_data, player, player)
 
-    return nodes, neighbours, piece_data
+            if check_game_end(board, neighbours, piece_data, player):
+                return nodes, neighbours, piece_data, (player + 1) % 2
+
+    return nodes, neighbours, piece_data, None
 
 
 def check_take_possible(board, neighbours, player):
@@ -123,14 +131,27 @@ directions = [(-1, -1), (-1, 0), (0, 1), (1, 1), (1, 0), (0, -1)]
 
 board, neighbours = generate_board_dict(piece_data, directions)
 
+player = 0
 
-# board, neighbours, piece_data = move_piece((0, 1), (0, 0), board, neighbours, piece_data)
-# board, neighbours, piece_data = stack_piece((0, 3), (0, 4), board, neighbours, piece_data)
-
-# print(get_valid_target_nodes(board, neighbours, (0, 2), 0))
-# print(get_valid_target_nodes(board, neighbours, (0, 2), 1))
-
+print("TZAAR")
 print(board)
-#turn(board, neighbours, piece_data, 0)
 
-print(neighbours)
+
+board, neighbours, piece_data, winner = turn(board, neighbours, piece_data, player, True)
+
+print(winner)
+print(type(winner))
+
+player = 1
+
+while winner is None:
+    print("Next Player")
+
+    turn(board, neighbours, piece_data, player)
+    player = (player + 1) % 2
+
+    print(board)
+
+print(winner, "Won!")
+
+print(get_valid_target_nodes(board, neighbours, (0, 0), 0))
