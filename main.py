@@ -1,6 +1,5 @@
 import random
-from numpy import *
-
+import numpy as np
 
 def generate_connections(node, nodes, directions):
     connections = [(node[0] + dir[0], node[1] + dir[1]) if (node[0] + dir[0], node[1] + dir[1]) in nodes else None for dir in directions]
@@ -8,7 +7,7 @@ def generate_connections(node, nodes, directions):
     return connections
 
 
-def generate_board_dict(piece_data, directions, side_length=5):
+def generate_board_dict(piece_data, directions, side_length=5, xy_0=(0, 0), s=5, d=1):
     max_row_length = 2 * side_length - 1
 
     board_keys = [(x, y) for x in range(max_row_length) for y in range(max_row_length - abs(x-side_length+1))]
@@ -17,7 +16,9 @@ def generate_board_dict(piece_data, directions, side_length=5):
     piece_order = [key for key, value in piece_data.items() for i in range(value)]
     random.shuffle(piece_order)
 
-    node_data = [[piece, 1] for piece in piece_order]
+    node_pixel_coordinates = generate_node_coordinate_array(board_keys, xy_0, d, s)
+
+    node_data = [[piece, 1, node_pixel_coordinates[i]] for i, piece in enumerate(piece_order)]
     node_dict = dict(zip(board_keys, node_data))
     
     neighbour_data = [generate_connections(node, board_keys, directions) for node in board_keys]
@@ -126,32 +127,53 @@ def check_game_end(board, neighbours, piece_data, player): # TODO test this
     return False
 
 
+def generate_node_coordinate_array_upper(nodes, d, s):
+    coord_array = np.array(nodes)
+
+    coord_array = np.apply_along_axis(lambda node: (d*np.sqrt(3)/2 * (node[1]-node[0]), d/2 * (node[1]+node[0]) - (s-1)*d), 1, coord_array)
+
+    return coord_array
+
+
+def generate_node_coordinate_array(nodes, centre_coord, d, s):
+    upper_nodes = nodes[:int(((3*s**2-s-2)/2))]
+    upper_nodes_coord_array = generate_node_coordinate_array_upper(upper_nodes, d, s)
+
+    lower_nodes_coord_array = -1 * upper_nodes_coord_array[:int((3*s**2-5*s+2)/2)][::-1] # rotates the coordinates from the upper
+
+    nodes_coordinate_array = np.concatenate((upper_nodes_coord_array, lower_nodes_coord_array))
+
+    return nodes_coordinate_array + centre_coord
+
+
 piece_data = {("W-Tzaar", 0): 6, ("W-Tzaara", 0): 9, ("W-Tott", 0): 15, ("B-Tzaar", 1): 6, ("B-Tzaara", 1): 9, ("B-Tott", 1): 15}
 directions = [(-1, -1), (-1, 0), (0, 1), (1, 1), (1, 0), (0, -1)]
 
 board, neighbours = generate_board_dict(piece_data, directions)
+node_pixels = {}
 
-player = 0
-
-print("TZAAR")
 print(board)
 
+###COMMENT OUT AFTER THIS TO STOP THE GAME PLAYING
 
-board, neighbours, piece_data, winner = turn(board, neighbours, piece_data, player, True)
-
-print(winner)
-print(type(winner))
-
-player = 1
-
-while winner is None:
-    print("Next Player")
-
-    turn(board, neighbours, piece_data, player)
-    player = (player + 1) % 2
-
-    print(board)
-
-print(winner, "Won!")
-
-print(get_valid_target_nodes(board, neighbours, (0, 0), 0))
+# player = 0
+#
+# print("TZAAR")
+# print(board)
+#
+#
+# board, neighbours, piece_data, winner = turn(board, neighbours, piece_data, player, True)
+#
+# player = 1
+#
+# while winner is None:
+#     print("Next Player")
+#
+#     turn(board, neighbours, piece_data, player)
+#     player = (player + 1) % 2
+#
+#     print(board)
+#
+# print(winner, "Won!")
+#
+#
