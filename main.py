@@ -7,7 +7,7 @@ def generate_connections(node, nodes, directions):
     return connections
 
 
-def generate_board_dict(piece_data, directions, side_length=5, xy_0=(0, 0), s=5, d=1):
+def generate_board_dict(piece_data, directions, side_length=5, xy_0=(368, 75), s=5, d=84.75):
     max_row_length = 2 * side_length - 1
 
     board_keys = [(x, y) for x in range(max_row_length) for y in range(max_row_length - abs(x-side_length+1))]
