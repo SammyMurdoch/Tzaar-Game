@@ -70,7 +70,7 @@ def sub_turn(board, neighbours, piece_data, target_colour, player):
     print("What node do you want to move to?")
     end = eval(input())
 
-    if target_colour == player:
+    if target_colour != player:
         nodes, neighbours, piece_data = move_piece(start, end, board, neighbours, piece_data)
 
     else:
