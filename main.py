@@ -30,8 +30,8 @@ def generate_board_dict(piece_data, directions, side_length=5, centre=(368, 414)
 def move_piece(start, end, nodes, neighbours, piece_data):
     piece_data[nodes[end][0]] -= 1
 
-    nodes[end] = nodes[start]
-    nodes[start] = [None, 0]
+    nodes[end] = [nodes[start][0], nodes[start][1], nodes[end][2]]
+    nodes[start] = [None, 0, nodes[start][2]]
 
     for d, neighbour in enumerate(neighbours[start]):
         if neighbour is not None:
