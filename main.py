@@ -146,34 +146,40 @@ def generate_node_coordinate_array(nodes, centre_coord, d, s):
     return nodes_coordinate_array + centre_coord
 
 
-piece_data = {("W-Tzaar", 0): 6, ("W-Tzaara", 0): 9, ("W-Tott", 0): 15, ("B-Tzaar", 1): 6, ("B-Tzaara", 1): 9, ("B-Tott", 1): 15}
+def game(piece_data, directions):
+    board, neighbours = generate_board_dict(piece_data, directions)
+
+    print(board)
+
+    #COMMENT OUT AFTER THIS TO STOP THE GAME PLAYING
+
+    player = 0
+
+    print("TZAAR")
+    print(board)
+
+
+    board, neighbours, piece_data, winner = turn(board, neighbours, piece_data, player, True)
+
+    player = 1
+
+    while winner is None:
+        print("Next Player")
+
+        turn(board, neighbours, piece_data, player)
+        player = (player + 1) % 2
+
+        print(board)
+
+    print(winner, "Won!")
+
+piece_data = {("W-Tzaar", 0, "Pieces/white_tzaar.png"): 6,
+              ("W-Tzaara", 0, "Pieces/white_tzaara.png"): 9,
+              ("W-Tott", 0, "Pieces/white_tott.png"): 15,
+              ("B-Tzaar", 1, "Pieces/black_tzaar.png"): 6,
+              ("B-Tzaara", 1, "Pieces/black_tzaara.png"): 9,
+              ("B-Tott", 1, "Pieces/black_tott.png"): 15}
+
 directions = [(-1, -1), (-1, 0), (0, 1), (1, 1), (1, 0), (0, -1)]
 
-board, neighbours = generate_board_dict(piece_data, directions)
-node_pixels = {}
-
-print(board)
-
-###COMMENT OUT AFTER THIS TO STOP THE GAME PLAYING
-
-# player = 0
-#
-# print("TZAAR")
-# print(board)
-#
-#
-# board, neighbours, piece_data, winner = turn(board, neighbours, piece_data, player, True)
-#
-# player = 1
-#
-# while winner is None:
-#     print("Next Player")
-#
-#     turn(board, neighbours, piece_data, player)
-#     player = (player + 1) % 2
-#
-#     print(board)
-#
-# print(winner, "Won!")
-#
-#
+#game(piece_data, directions)
