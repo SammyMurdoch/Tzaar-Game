@@ -30,7 +30,11 @@ while True:
 
         if ev.type == pygame.KEYDOWN:
             if ev.key == pygame.K_SPACE:
+                piece_data = piece_data_fixed.copy()
+
                 board, neighbours = generate_board_dict(piece_data, directions)
+                print(board)
+                print(piece_data)
 
     screen.blit(board_surface, (0, 0))
 
@@ -41,4 +45,3 @@ while True:
 
     pygame.display.update()
     clock.tick(60)
-

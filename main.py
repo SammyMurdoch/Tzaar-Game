@@ -173,12 +173,14 @@ def game(piece_data, directions):
 
     print(winner, "Won!")
 
-piece_data = {("W-Tzaar", 0, "Pieces/white_tzaar.png"): 6,
+piece_data_fixed = {("W-Tzaar", 0, "Pieces/white_tzaar.png"): 6,
               ("W-Tzaara", 0, "Pieces/white_tzaara.png"): 9,
               ("W-Tott", 0, "Pieces/white_tott.png"): 15,
               ("B-Tzaar", 1, "Pieces/black_tzaar.png"): 6,
               ("B-Tzaara", 1, "Pieces/black_tzaara.png"): 9,
               ("B-Tott", 1, "Pieces/black_tott.png"): 15}
+
+piece_data = piece_data_fixed.copy()
 
 directions = [(-1, -1), (-1, 0), (0, 1), (1, 1), (1, 0), (0, -1)]
 
