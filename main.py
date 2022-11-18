@@ -41,7 +41,7 @@ def move_piece(start, end, nodes, neighbours, piece_data):
 
 
 def stack_piece(start, end, nodes, neighbours, piece_data):
-    stack_height = nodes[start][1]
+    stack_height = nodes[end][1]
 
     nodes, neighbours, piece_data = move_piece(start, end, nodes, neighbours, piece_data)
     nodes[end][1] += stack_height
@@ -49,7 +49,7 @@ def stack_piece(start, end, nodes, neighbours, piece_data):
     return nodes, neighbours, piece_data
 
 
-def get_valid_target_nodes(board, neighbours, node, target_colour):
+def get_valid_target_nodes(board, neighbours, node, target_colour): # TODO check for stack height
     valid_moves = []
 
     if board[node][0] is not None:

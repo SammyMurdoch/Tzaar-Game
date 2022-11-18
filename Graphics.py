@@ -28,10 +28,10 @@ def display_turn_information(player, phase):
         phase_info = "take a piece, stack a piece or pass."
 
     player_text_font = pygame.font.Font(None, 30)
-    player_text_surf = player_text_font.render(f"{player_name} to move", True, "White")
+    player_text_surf = player_text_font.render(f"{player_name} to move,", True, "White")
 
     phase_info_font = pygame.font.Font(None, 18)
-    phase_info_surf = phase_info_font.render(f"You can {phase_info}", True, "White")
+    phase_info_surf = phase_info_font.render(f"You can {phase_info}", True, "White") # TODO Check if take, stack are possible
 
     screen.blit(player_text_surf, (15, 55))
     screen.blit(phase_info_surf, (15, 80))
@@ -76,7 +76,11 @@ print(board)
 
 print(board)
 
+selected_nodes = [None, None]
+
 while True:
+    m_pos = (0, 0)
+
     for ev in pygame.event.get():
         if ev.type == pygame.QUIT:
             pygame.quit()
@@ -90,6 +94,9 @@ while True:
                 print(board)
                 print(piece_data)
 
+        if ev.type == pygame.MOUSEBUTTONDOWN:
+            m_pos = pygame.mouse.get_pos()
+
     screen.blit(board_surf, (0, 0))
 
     display_pass()
@@ -102,6 +109,19 @@ while True:
 
             display_stack_height(board, node)
 
+            if piece_rects[board[node][0][0]].collidepoint(m_pos):
+                if selected_nodes[0] == None:
+                    selected_nodes[0] = node
+
+                elif selected_nodes[0] == node:
+                    selected_nodes[0] = None
+
+                else:
+                    selected_nodes[1] = node
+
+                    board, neighbours, piece_data = stack_piece(selected_nodes[0], selected_nodes[1], board, neighbours, piece_data)
+                    selected_nodes = [None, None]
+                    print(board)
 
     pygame.display.update()
     clock.tick(60)
