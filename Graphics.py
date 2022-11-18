@@ -70,12 +70,6 @@ piece_rects = {piece_type: piece_surfs[piece_type].get_rect() for piece_type in 
 
 board, neighbours = generate_board_dict(piece_data, directions)
 
-print(board)
-
-#board, neighbours, piece_data, winner = turn(board, neighbours, piece_data, 0)
-
-print(board)
-
 selected_nodes = [None, None]
 
 while True:
@@ -110,10 +104,10 @@ while True:
             display_stack_height(board, node)
 
             if piece_rects[board[node][0][0]].collidepoint(m_pos):
-                if selected_nodes[0] == None:
+                if selected_nodes[0] is None:
                     selected_nodes[0] = node
 
-                elif selected_nodes[0] == node:
+                elif selected_nodes[0] is node:
                     selected_nodes[0] = None
 
                 else:
@@ -121,7 +115,6 @@ while True:
 
                     board, neighbours, piece_data = stack_piece(selected_nodes[0], selected_nodes[1], board, neighbours, piece_data)
                     selected_nodes = [None, None]
-                    print(board)
 
     pygame.display.update()
     clock.tick(60)
