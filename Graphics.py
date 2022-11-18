@@ -9,15 +9,38 @@ def display_stack_height(board, node):
     stack_height = str(board[node][1])
 
     stack_height_surf = stack_height_font.render(stack_height, True, "White")
-
     stack_height_rect = stack_height_surf.get_rect(center=board[node][2])
 
     screen.blit(stack_height_surf, stack_height_rect)
 
 
+def display_turn_information(player, phase):
+    if player == 0:
+        player_name = "White"
+
+    else:
+        player_name = "Black"
+
+    if phase == 1:
+        phase_info = "take a piece."
+
+    else:
+        phase_info = "take a piece, stack a piece or pass."
+
+    player_text_font = pygame.font.Font(None, 30)
+    player_text_surf = player_text_font.render(f"{player_name} to move", True, "White")
+
+    phase_info_font = pygame.font.Font(None, 18)
+    phase_info_surf = phase_info_font.render(f"You can {phase_info}", True, "White")
+
+    screen.blit(player_text_surf, (15, 55))
+    screen.blit(phase_info_surf, (15, 80))
+
+
 def display_pass():
     pass_font = pygame.font.Font(None, 70)
     pass_colour = "White"
+
     pass_font_surf = pass_font.render("PASS", True, pass_colour)
     pass_surface_rect = pass_font_surf.get_rect(topright=(681, 55))
 
@@ -70,6 +93,7 @@ while True:
     screen.blit(board_surf, (0, 0))
 
     display_pass()
+    display_turn_information(1, 1)
 
     for node in board:
         if board[node][0] is not None:
