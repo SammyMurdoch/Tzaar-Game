@@ -15,6 +15,23 @@ def display_stack_height(board, node):
     screen.blit(stack_height_surf, stack_height_rect)
 
 
+def display_pass():
+    pass_font = pygame.font.Font(None, 70)
+    pass_colour = "White"
+    pass_font_surf = pass_font.render("PASS", True, pass_colour)
+    pass_surface_rect = pass_font_surf.get_rect(topright=(681, 55))
+
+    if pass_surface_rect.collidepoint(pygame.mouse.get_pos()):
+        pass_colour = "Grey"
+
+    else:
+        pass_colour = "White"
+
+    pass_font_surf = pass_font.render("PASS", True, pass_colour)
+
+    screen.blit(pass_font_surf, pass_surface_rect)
+
+
 pygame.init()
 
 screen = pygame.display.set_mode((736, 826))
@@ -32,7 +49,7 @@ board, neighbours = generate_board_dict(piece_data, directions)
 
 print(board)
 
-board, neighbours, piece_data, winner = turn(board, neighbours, piece_data, 0)
+#board, neighbours, piece_data, winner = turn(board, neighbours, piece_data, 0)
 
 print(board)
 
@@ -52,7 +69,7 @@ while True:
 
     screen.blit(board_surf, (0, 0))
 
-    stack_height = "rgb"
+    display_pass()
 
     for node in board:
         if board[node][0] is not None:
@@ -60,6 +77,7 @@ while True:
             screen.blit(piece_surfs[board[node][0][0]], piece_rects[board[node][0][0]])
 
             display_stack_height(board, node)
+
 
     pygame.display.update()
     clock.tick(60)
