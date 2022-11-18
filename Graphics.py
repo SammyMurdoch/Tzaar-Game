@@ -1,4 +1,5 @@
 import pygame
+import pygame.gfxdraw
 from sys import exit
 import numpy as np
 from main import *
@@ -55,6 +56,19 @@ def display_pass():
     screen.blit(pass_font_surf, pass_surface_rect)
 
 
+def display_valid_move_indicator(location):
+    pygame.gfxdraw.aacircle(screen, int(location[0]), int(location[1]), 36, (0, 128, 255, 100))
+    pygame.gfxdraw.filled_circle(screen, int(location[0]), int(location[1]), 36, (0, 128, 255, 100))
+
+
+def display_piece(board, node):
+    if board[node][0] is not None:
+        piece_rects[board[node][0][0]].center = board[node][2]
+        screen.blit(piece_surfs[board[node][0][0]], piece_rects[board[node][0][0]])
+
+        display_stack_height(board, node)
+
+
 pygame.init()
 
 screen = pygame.display.set_mode((736, 826))
@@ -71,6 +85,9 @@ piece_rects = {piece_type: piece_surfs[piece_type].get_rect() for piece_type in 
 board, neighbours = generate_board_dict(piece_data, directions)
 
 selected_nodes = [None, None]
+valid_move_nodes = []
+
+print(generate_connections((8, 4), board, directions))
 
 while True:
     m_pos = (0, 0)
@@ -97,24 +114,26 @@ while True:
     display_turn_information(1, 1)
 
     for node in board:
-        if board[node][0] is not None:
-            piece_rects[board[node][0][0]].center = board[node][2]
-            screen.blit(piece_surfs[board[node][0][0]], piece_rects[board[node][0][0]])
+        display_piece(board, node)
 
-            display_stack_height(board, node)
+        if node in valid_move_nodes:
+            display_valid_move_indicator(board[node][2])
+            print(valid_move_nodes)
 
-            if piece_rects[board[node][0][0]].collidepoint(m_pos):
-                if selected_nodes[0] is None:
-                    selected_nodes[0] = node
+        if piece_rects[board[node][0][0]].collidepoint(m_pos):
+            if selected_nodes[0] is None:
+                selected_nodes[0] = node
+                valid_move_nodes = get_valid_target_nodes(board, neighbours, node, 1) #TODO make this for the correct player
 
-                elif selected_nodes[0] is node:
-                    selected_nodes[0] = None
+            elif selected_nodes[0] == node: # TODO Change this to a node not in the valid moves
+                selected_nodes[0] = None
+                valid_move_nodes = []
 
-                else:
-                    selected_nodes[1] = node
+            else:
+                selected_nodes[1] = node
 
-                    board, neighbours, piece_data = stack_piece(selected_nodes[0], selected_nodes[1], board, neighbours, piece_data)
-                    selected_nodes = [None, None]
+                board, neighbours, piece_data = stack_piece(selected_nodes[0], selected_nodes[1], board, neighbours, piece_data)
+                selected_nodes = [None, None]
 
     pygame.display.update()
     clock.tick(60)

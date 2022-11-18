@@ -1,7 +1,8 @@
 import random
 import numpy as np
 
-def generate_connections(node, nodes, directions):
+
+def generate_connections(node, nodes, directions): #TODO this seems not to work for nodes like (8, 4)
     connections = [(node[0] + dir[0], node[1] + dir[1]) if (node[0] + dir[0], node[1] + dir[1]) in nodes else None for dir in directions]
 
     return connections
@@ -182,6 +183,7 @@ piece_data_fixed = {("W-Tzaar", 0, "Pieces/white_tzaar.png"): 6,
 
 piece_data = piece_data_fixed.copy()
 
-directions = [(-1, -1), (-1, 0), (0, 1), (1, 1), (1, 0), (0, -1)]
+directions = [(-1, -1), (-1, 0), (0, 1), (1, 1), (1, 0), (0, -1)] #TODO Make this upper_directions
+lower_directions = [(-1, 0), (-1, 1), (0, 1), (1, 0), (1, -1), (0, -1)]
 
 #game(piece_data, directions)
