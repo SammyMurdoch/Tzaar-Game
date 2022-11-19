@@ -86,8 +86,6 @@ board, neighbours = generate_board_dict(piece_data, directions)
 selected_nodes = [None, None]
 valid_move_nodes = []
 
-print(generate_connections((8, 4), board, directions))
-
 player = 0
 phase = 0
 
@@ -106,8 +104,6 @@ while True:
                 piece_data = piece_data_fixed.copy()
 
                 board, neighbours = generate_board_dict(piece_data, directions)
-                print(board)
-                print(piece_data)
 
         if ev.type == pygame.MOUSEBUTTONDOWN:
             m_pos = pygame.mouse.get_pos()
@@ -124,23 +120,26 @@ while True:
 
             if node in valid_move_nodes:
                 display_valid_move_indicator(board[node][2])
-                #print(valid_move_nodes)
 
             if piece_rects[board[node][0][0]].collidepoint(m_pos):
-                if selected_nodes[0] is None:
+                if selected_nodes[0] is None and board[node][0][1] == player:
                     selected_nodes[0] = node
-                    valid_move_nodes = get_valid_target_nodes(board, neighbours, node, 1) #TODO make this for the correct player
-                    print(selected_nodes)
 
-                elif node not in valid_move_nodes: # TODO Change this to a node not in the valid moves
+                    valid_move_nodes = get_valid_target_nodes(board, neighbours, node, (player + 1) % 2, phase)
+
+                elif node not in valid_move_nodes: # TODO Change this to anywhere on the board other than valid nodes
                     selected_nodes[0] = None
                     valid_move_nodes = []
-                    print(selected_nodes)
 
                 else:
                     selected_nodes[1] = node
 
-                    board, neighbours, piece_data = stack_piece(selected_nodes[0], selected_nodes[1], board, neighbours, piece_data)
+                    if board[selected_nodes[1]][0][1] != player:
+                        board, neighbours, piece_data = move_piece(selected_nodes[0], selected_nodes[1], board, neighbours, piece_data)
+
+                    else:
+                        board, neighbours, piece_data = stack_piece(selected_nodes[0], selected_nodes[1], board, neighbours, piece_data)
+
                     selected_nodes = [None, None]
                     valid_move_nodes = []
 

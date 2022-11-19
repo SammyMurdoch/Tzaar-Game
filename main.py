@@ -50,13 +50,18 @@ def stack_piece(start, end, nodes, neighbours, piece_data):
     return nodes, neighbours, piece_data
 
 
-def get_valid_target_nodes(board, neighbours, node, target_colour): # TODO check for stack height
+def get_valid_target_nodes(board, neighbours, node, target_colour, phase): # TODO check for stack height
     valid_moves = []
 
     if board[node][0] is not None:
         for neighbour in neighbours[node]:
             if neighbour is not None:
-                if board[neighbour][0][1] == target_colour:
+                if phase == 0:
+                    if board[neighbour][0][1] == target_colour:
+                        if board[node][1] >= board[neighbour][1]:
+                            valid_moves.append(neighbour)
+
+                else:
                     valid_moves.append(neighbour)
 
     return valid_moves
