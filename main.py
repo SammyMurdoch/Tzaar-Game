@@ -159,7 +159,6 @@ def game(piece_data, directions):
     print("TZAAR")
     print(board)
 
-
     board, neighbours, piece_data, winner = turn(board, neighbours, piece_data, player, True)
 
     player = 1 # TODO is this needed or put this in while

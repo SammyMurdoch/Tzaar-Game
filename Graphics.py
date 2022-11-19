@@ -22,7 +22,7 @@ def display_turn_information(player, phase):
     else:
         player_name = "Black"
 
-    if phase == 1:
+    if phase == 0:
         phase_info = "take a piece."
 
     else:
@@ -62,11 +62,10 @@ def display_valid_move_indicator(location):
 
 
 def display_piece(board, node):
-    if board[node][0] is not None:
-        piece_rects[board[node][0][0]].center = board[node][2]
-        screen.blit(piece_surfs[board[node][0][0]], piece_rects[board[node][0][0]])
+    piece_rects[board[node][0][0]].center = board[node][2]
+    screen.blit(piece_surfs[board[node][0][0]], piece_rects[board[node][0][0]])
 
-        display_stack_height(board, node)
+    display_stack_height(board, node)
 
 
 pygame.init()
@@ -88,6 +87,11 @@ selected_nodes = [None, None]
 valid_move_nodes = []
 
 print(generate_connections((8, 4), board, directions))
+
+player = 0
+phase = 0
+
+first_turn = True
 
 while True:
     m_pos = (0, 0)
@@ -111,29 +115,45 @@ while True:
     screen.blit(board_surf, (0, 0))
 
     display_pass()
-    display_turn_information(1, 1)
+    display_turn_information(player, phase)
 
     for node in board:
-        display_piece(board, node)
+        if board[node][0] is not None:
 
-        if node in valid_move_nodes:
-            display_valid_move_indicator(board[node][2])
-            print(valid_move_nodes)
+            display_piece(board, node)
 
-        if piece_rects[board[node][0][0]].collidepoint(m_pos):
-            if selected_nodes[0] is None:
-                selected_nodes[0] = node
-                valid_move_nodes = get_valid_target_nodes(board, neighbours, node, 1) #TODO make this for the correct player
+            if node in valid_move_nodes:
+                display_valid_move_indicator(board[node][2])
+                #print(valid_move_nodes)
 
-            elif selected_nodes[0] == node: # TODO Change this to a node not in the valid moves
-                selected_nodes[0] = None
-                valid_move_nodes = []
+            if piece_rects[board[node][0][0]].collidepoint(m_pos):
+                if selected_nodes[0] is None:
+                    selected_nodes[0] = node
+                    valid_move_nodes = get_valid_target_nodes(board, neighbours, node, 1) #TODO make this for the correct player
+                    print(selected_nodes)
 
-            else:
-                selected_nodes[1] = node
+                elif node not in valid_move_nodes: # TODO Change this to a node not in the valid moves
+                    selected_nodes[0] = None
+                    valid_move_nodes = []
+                    print(selected_nodes)
 
-                board, neighbours, piece_data = stack_piece(selected_nodes[0], selected_nodes[1], board, neighbours, piece_data)
-                selected_nodes = [None, None]
+                else:
+                    selected_nodes[1] = node
+
+                    board, neighbours, piece_data = stack_piece(selected_nodes[0], selected_nodes[1], board, neighbours, piece_data)
+                    selected_nodes = [None, None]
+                    valid_move_nodes = []
+
+                    if first_turn == True:
+                        first_turn = False
+
+                        player = 1
+
+                    else:
+                        phase = (phase + 1) % 2
+
+                        if phase == 0:
+                            player = (player + 1) % 2
 
     pygame.display.update()
     clock.tick(60)
