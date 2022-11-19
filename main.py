@@ -67,10 +67,7 @@ def generate_board_dict(piece_data, directions, side_length=5, centre=(368, 414)
     node_dict = dict(zip(board_keys, node_data))
     
     neighbour_data = [generate_connections(node, board_keys, side_length) for node in board_keys]
-    print(board_keys)
     neighbour_dict = dict(zip(board_keys, neighbour_data))
-
-    print(neighbour_dict)
 
     return node_dict, neighbour_dict
 
@@ -109,9 +106,6 @@ def get_valid_target_nodes(board, neighbours, node, target_colour, phase): # TOD
                             valid_moves.append(neighbour)
 
                 else:
-                    print(board[neighbour])
-                    print(node)
-                    print("neigh", neighbours)
                     if board[neighbour][0][1] == target_colour:
                         if board[node][1] >= board[neighbour][1]:
                             valid_moves.append(neighbour)
