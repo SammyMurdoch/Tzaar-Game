@@ -104,6 +104,8 @@ valid_move_nodes = []
 player = 0
 phase = 0
 
+winner = None
+
 first_turn = True
 
 while True:
@@ -133,44 +135,47 @@ while True:
 
             display_piece(board, node)
 
-            if node in valid_move_nodes:
-                display_valid_move_indicator(board[node][2])
+            if winner is None:
+                if node in valid_move_nodes:
+                    display_valid_move_indicator(board[node][2])
 
-            if piece_rects[board[node][0][0]].collidepoint(m_pos):
-                if selected_nodes[0] is None and board[node][0][1] == player:
-                    selected_nodes[0] = node
+                if piece_rects[board[node][0][0]].collidepoint(m_pos):
+                    if selected_nodes[0] is None and board[node][0][1] == player:
+                        selected_nodes[0] = node
 
-                    valid_move_nodes = get_valid_target_nodes(board, neighbours, node, (player + 1) % 2, phase)
+                        valid_move_nodes = get_valid_target_nodes(board, neighbours, node, (player + 1) % 2, phase)
 
-                elif node not in valid_move_nodes: # TODO Change this to anywhere on the board other than valid nodes
-                    selected_nodes[0] = None
-                    valid_move_nodes = []
-
-                else:
-                    selected_nodes[1] = node
-
-                    if board[selected_nodes[1]][0][1] != player:
-                        board, neighbours, piece_data = move_piece(selected_nodes[0], selected_nodes[1], board, neighbours, piece_data)
+                    elif node not in valid_move_nodes: # TODO Change this to anywhere on the board other than valid nodes
+                        selected_nodes[0] = None
+                        valid_move_nodes = []
 
                     else:
-                        board, neighbours, piece_data = stack_piece(selected_nodes[0], selected_nodes[1], board, neighbours, piece_data)
+                        selected_nodes[1] = node
 
-                    selected_nodes = [None, None]
-                    valid_move_nodes = []
+                        if board[selected_nodes[1]][0][1] != player:
+                            board, neighbours, piece_data = move_piece(selected_nodes[0], selected_nodes[1], board, neighbours, piece_data)
 
-                    if first_turn == True:
-                        first_turn = False
+                        else:
+                            board, neighbours, piece_data = stack_piece(selected_nodes[0], selected_nodes[1], board, neighbours, piece_data)
 
-                        player = 1
+                        selected_nodes = [None, None]
+                        valid_move_nodes = []
 
-                    else:
-                        phase, player = update_phase_player(phase, player)
+                        if first_turn:
+                            first_turn = False
 
-                        if check_game_end(board, neighbours, piece_data, player):
-                            if phase == 0:
-                                print(f"Player {(player + 1) % 2} won.")
+                            player = 1
 
-                            if phase == 1:
+                        else:
+                            phase, player = update_phase_player(phase, player)
+
+                            if check_game_end(board, neighbours, piece_data, player):
+                                if phase == 0:
+                                    winner = (player + 1) % 2
+
+                                if phase == 1:
+                                    winner = player
+
                                 print(f"Player {player} won.")
 
     pygame.display.update()
