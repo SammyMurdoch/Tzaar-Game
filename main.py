@@ -116,54 +116,6 @@ def get_valid_target_nodes(board, neighbours, node, target_colour, phase): # TOD
     return valid_moves
 
 
-def sub_turn(board, neighbours, piece_data, target_colour, player):
-    print("What is your starting node?")
-    start = eval(input())
-
-    print("Your valid target nodes are:", get_valid_target_nodes(board, neighbours, start, target_colour))
-
-    print("What node do you want to move to?")
-    end = eval(input())
-
-    if target_colour != player:
-        nodes, neighbours, piece_data = move_piece(start, end, board, neighbours, piece_data)
-
-    else:
-        nodes, neighbours, piece_data = stack_piece(start, end, board, neighbours, piece_data)
-
-    return nodes, neighbours, piece_data
-
-
-def turn(board, neighbours, piece_data, player, start=False):
-    if check_game_end(board, neighbours, piece_data, player):
-        return board, neighbours, piece_data, (player + 1) % 2
-
-    print("First move: Take")
-
-    nodes, neighbours, piece_data = sub_turn(board, neighbours, piece_data, (player+1) % 2, player)
-
-    if check_game_end(board, neighbours, piece_data, player):
-        return nodes, neighbours, piece_data, player
-
-    if not start:
-        print("Second Move: Take, Stack or Pass")
-        second_move = input("Take: 0, Stack: 1, Pass: 2\n")
-
-        if second_move == "0":
-            nodes, neighbours, piece_data = sub_turn(board, neighbours, piece_data, (player+1) % 2, player)
-
-            if check_game_end(board, neighbours, piece_data, player):
-                return nodes, neighbours, piece_data, player
-
-        elif second_move == "1":
-            nodes, neighbours, piece_data = sub_turn(board, neighbours, piece_data, player, player)
-
-            if check_game_end(board, neighbours, piece_data, player):
-                return nodes, neighbours, piece_data, (player + 1) % 2
-
-    return nodes, neighbours, piece_data, None
-
-
 def check_take_possible(board, neighbours, player):
     for node in neighbours:
         if len(get_valid_target_nodes(board, neighbours, node, (player + 1) % 2, 0)) > 0:
@@ -200,32 +152,6 @@ def generate_node_coordinate_array(nodes, centre_coord, d, s):
 
     return nodes_coordinate_array + centre_coord
 
-
-def game(piece_data, directions):
-    board, neighbours = generate_board_dict(piece_data, directions)
-
-    print(board)
-
-    #COMMENT OUT AFTER THIS TO STOP THE GAME PLAYING
-
-    player = 0
-
-    print("TZAAR")
-    print(board)
-
-    board, neighbours, piece_data, winner = turn(board, neighbours, piece_data, player, True)
-
-    player = 1 # TODO is this needed or put this in while
-
-    while winner is None:
-        print("Next Player")
-
-        turn(board, neighbours, piece_data, player)
-        player = (player + 1) % 2
-
-        print(board)
-
-    print(winner, "Won!")
 
 piece_data_fixed = {("W-Tzaar", 0, "Pieces/white_tzaar.png"): 6,
               ("W-Tzaara", 0, "Pieces/white_tzaara.png"): 9,
