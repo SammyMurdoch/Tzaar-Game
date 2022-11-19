@@ -146,6 +146,7 @@ while True:
                         valid_move_nodes = get_valid_target_nodes(board, neighbours, node, (player + 1) % 2, phase)
 
                     elif node not in valid_move_nodes: # TODO Change this to anywhere on the board other than valid nodes
+                        #TODO if you click on a piece which is yours and you can't move to set that as first piece selected
                         selected_nodes[0] = None
                         valid_move_nodes = []
 

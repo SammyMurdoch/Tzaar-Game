@@ -2,10 +2,54 @@ import random
 import numpy as np
 
 
-def generate_connections(node, nodes, directions): #TODO this seems not to work for nodes like (8, 4)
-    connections = [(node[0] + dir[0], node[1] + dir[1]) if (node[0] + dir[0], node[1] + dir[1]) in nodes else None for dir in directions]
+def generate_connections(node, nodes, s): #TODO this seems not to work for nodes like (8, 4)
+    #directions = [(-1, -1), (-1, 0), (0, 1), (1, 1), (1, 0), (0, -1)]  # TODO Make this upper_directions
 
-    return connections
+    #TODO CHECK RESULT IS IN NODES
+
+    connections = [None, None, None, None, None, None]
+
+    if node[0] <= s-1:
+        connections[0] = (node[0] - 1, node[1] - 1)
+        connections[1] = (node[0] - 1, node[1])
+        # connections.append((node[0] - 1, node[1] - 1)) #d0
+        # connections.append((node[0] - 1, node[1])) #d1
+
+    else:
+        connections[0] = (node[0] - 1, node[1])
+        connections[1] = (node[0] - 1, node[1] + 1)
+        # connections.append((node[0] - 1, node[1])) #d0
+        # connections.append((node[0] - 1, node[1] + 1)) #d1
+
+    connections[2] = (node[0], node[1] + 1)
+    # connections.append((node[0], node[1] + 1)) #d2
+
+    if node[0] < s-1:
+        connections[3] = (node[0] + 1, node[1] + 1)
+        connections[4] = (node[0] + 1, node[1])
+        # connections.append((node[0] + 1, node[1] + 1)) #d3
+        # connections.append((node[0] + 1, node[1])) #d4
+
+    else:
+        connections[3] = (node[0] + 1, node[1])
+        connections[4] = (node[0] + 1, node[1] - 1)
+        # connections.append((node[0] - 1, node[1])) #d3
+        # connections.append((node[0] + 1, node[1] - 1)) #d4
+
+    connections[5] = (node[0], node[1] - 1)
+    #connections.append((node[0], node[1] - 1)) #d5
+
+    for i, connection in enumerate(connections[:]):
+        if connection not in nodes:
+            connections[i] = None
+
+    #(0, 0)[(-1, -1), (-1, 0), (0, 1), (1, 1), (1, 0), (0, -1)]
+    #(0, 0) [(-1, 0), (0, 1), (1, 1), (1, 0)]
+
+
+    #connections = [(node[0] + dir[0], node[1] + dir[1]) if (node[0] + dir[0], node[1] + dir[1]) in nodes else None for dir in directions]
+
+    return connections #TODO probobly have to have None is the place of bad directions
 
 
 def generate_board_dict(piece_data, directions, side_length=5, centre=(368, 414), s=5, d=84.75):
@@ -22,8 +66,11 @@ def generate_board_dict(piece_data, directions, side_length=5, centre=(368, 414)
     node_data = [[piece, 1, node_pixel_coordinates[i]] for i, piece in enumerate(piece_order)]
     node_dict = dict(zip(board_keys, node_data))
     
-    neighbour_data = [generate_connections(node, board_keys, directions) for node in board_keys]
+    neighbour_data = [generate_connections(node, board_keys, side_length) for node in board_keys]
+    print(board_keys)
     neighbour_dict = dict(zip(board_keys, neighbour_data))
+
+    print(neighbour_dict)
 
     return node_dict, neighbour_dict
 
@@ -57,12 +104,20 @@ def get_valid_target_nodes(board, neighbours, node, target_colour, phase): # TOD
         for neighbour in neighbours[node]:
             if neighbour is not None:
                 if phase == 0:
+                    if board[neighbour][0][1] == target_colour: #TODO things seem to be appending to neighbour nodes by mistake
+                        if board[node][1] >= board[neighbour][1]: #TODO this seems inefficient
+                            valid_moves.append(neighbour)
+
+                else:
+                    print(board[neighbour])
+                    print(node)
+                    print("neigh", neighbours)
                     if board[neighbour][0][1] == target_colour:
                         if board[node][1] >= board[neighbour][1]:
                             valid_moves.append(neighbour)
 
-                else:
-                    valid_moves.append(neighbour)
+                    else:
+                        valid_moves.append(neighbour)
 
     return valid_moves
 
