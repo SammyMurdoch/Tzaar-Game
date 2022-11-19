@@ -38,22 +38,37 @@ def display_turn_information(player, phase):
     screen.blit(phase_info_surf, (15, 80))
 
 
-def display_pass():
-    pass_font = pygame.font.Font(None, 70)
-    pass_colour = "White"
+def update_phase_player(phase, player):
+    phase = (phase + 1) % 2
 
-    pass_font_surf = pass_font.render("PASS", True, pass_colour)
-    pass_surface_rect = pass_font_surf.get_rect(topright=(681, 55))
+    if phase == 0:
+        player = (player + 1) % 2
 
-    if pass_surface_rect.collidepoint(pygame.mouse.get_pos()):
-        pass_colour = "Grey"
+    return phase, player
 
-    else:
+
+def display_pass(phase, player, m_down_pos):
+    if phase == 1:
+        pass_font = pygame.font.Font(None, 70)
         pass_colour = "White"
 
-    pass_font_surf = pass_font.render("PASS", True, pass_colour)
+        pass_font_surf = pass_font.render("PASS", True, pass_colour)
+        pass_surface_rect = pass_font_surf.get_rect(topright=(681, 55))
 
-    screen.blit(pass_font_surf, pass_surface_rect)
+        if pass_surface_rect.collidepoint(pygame.mouse.get_pos()):
+            pass_colour = "Grey"
+
+        else:
+            pass_colour = "White"
+
+        pass_font_surf = pass_font.render("PASS", True, pass_colour)
+
+        screen.blit(pass_font_surf, pass_surface_rect)
+
+        if pass_surface_rect.collidepoint(m_pos):
+            phase, player = update_phase_player(phase, player)
+
+    return phase, player
 
 
 def display_valid_move_indicator(location):
@@ -110,7 +125,7 @@ while True:
 
     screen.blit(board_surf, (0, 0))
 
-    display_pass()
+    phase, player = display_pass(phase, player, m_pos)
     display_turn_information(player, phase)
 
     for node in board:
@@ -149,10 +164,7 @@ while True:
                         player = 1
 
                     else:
-                        phase = (phase + 1) % 2
-
-                        if phase == 0:
-                            player = (player + 1) % 2
+                        phase, player = update_phase_player(phase, player)
 
     pygame.display.update()
     clock.tick(60)
