@@ -65,7 +65,7 @@ def display_pass(phase, player, m_down_pos):
 
         screen.blit(pass_font_surf, pass_surface_rect)
 
-        if pass_surface_rect.collidepoint(m_pos):
+        if pass_surface_rect.collidepoint(m_down_pos):
             phase, player = update_phase_player(phase, player)
 
     return phase, player
@@ -165,6 +165,13 @@ while True:
 
                     else:
                         phase, player = update_phase_player(phase, player)
+
+                        if check_game_end(board, neighbours, piece_data, player):
+                            if phase == 0:
+                                print(f"Player {(player + 1) % 2} won.")
+
+                            if phase == 1:
+                                print(f"Player {player} won.")
 
     pygame.display.update()
     clock.tick(60)

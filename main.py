@@ -117,7 +117,7 @@ def turn(board, neighbours, piece_data, player, start=False):
 
 def check_take_possible(board, neighbours, player):
     for node in neighbours:
-        if len(get_valid_target_nodes(board, neighbours, node, (player + 1) % 2)) > 0:
+        if len(get_valid_target_nodes(board, neighbours, node, (player + 1) % 2, 0)) > 0:
             return True
 
     return False
