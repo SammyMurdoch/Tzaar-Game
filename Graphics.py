@@ -21,7 +21,7 @@ def display_game_over(winner):
     pygame.draw.rect(screen, (167, 122, 68), (218, 288, 300, 250), 10)
 
     game_over_text_font = pygame.font.SysFont("erasdemiitc", 70)
-    winner_text_font = pygame.font.SysFont("erasdemiitc", 0)
+    winner_text_font = pygame.font.SysFont("erasdemiitc", 40)
 
     game_surf = game_over_text_font.render("GAME", True, (254, 176, 101))
     game_rect = game_surf.get_rect(center=(368, 350))
