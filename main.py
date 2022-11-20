@@ -32,6 +32,15 @@ def generate_connections(node, nodes, s):
     return connections
 
 
+def update_phase_player(phase, player):
+    phase = (phase + 1) % 2
+
+    if phase == 0:
+        player = (player + 1) % 2
+
+    return phase, player
+
+
 def generate_board_dict(piece_data, side_length=5, centre=(368, 414), s=5, d=84.75):
     max_row_length = 2 * side_length - 1
 

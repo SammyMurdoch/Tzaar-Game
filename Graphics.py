@@ -2,6 +2,7 @@ import pygame
 import pygame.gfxdraw
 from sys import exit
 from main import *
+import webbrowser
 
 
 def display_stack_height(board, node):
@@ -12,6 +13,27 @@ def display_stack_height(board, node):
     stack_height_rect = stack_height_surf.get_rect(center=board[node][2])
 
     screen.blit(stack_height_surf, stack_height_rect)
+
+
+def display_rules(m_down_pos):
+    rules_font = pygame.font.Font(None, 60)
+    rules_colour = "White"
+
+    rules_font_surf = rules_font.render("RULES", True, rules_colour)
+    rules_surface_rect = rules_font_surf.get_rect(bottomleft=(10, 822))
+
+    if rules_surface_rect.collidepoint(pygame.mouse.get_pos()):
+        rules_colour = "Grey"
+
+    else:
+        rules_colour = "White"
+
+    rules_font_surf = rules_font.render("RULES", True, rules_colour)
+
+    screen.blit(rules_font_surf, rules_surface_rect)
+
+    if rules_surface_rect.collidepoint(m_down_pos):
+        webbrowser.open(r"https://www.boardspace.net/tzaar/english/rules.htm")
 
 
 def display_game_over(winner):
@@ -56,15 +78,6 @@ def display_turn_information(player, phase):
 
     screen.blit(player_text_surf, (15, 55))
     screen.blit(phase_info_surf, (15, 80))
-
-
-def update_phase_player(phase, player):
-    phase = (phase + 1) % 2
-
-    if phase == 0:
-        player = (player + 1) % 2
-
-    return phase, player
 
 
 def display_pass(phase, player, m_down_pos):
@@ -161,6 +174,8 @@ while True:
             m_pos = pygame.mouse.get_pos()
 
     screen.blit(board_surf, (0, 0))
+
+    display_rules(m_pos)
 
     if winner is None:
         phase, player = display_pass(phase, player, m_pos)
