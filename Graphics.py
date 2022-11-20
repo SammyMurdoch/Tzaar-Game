@@ -23,7 +23,7 @@ def display_rules(m_down_pos):
     rules_surface_rect = rules_font_surf.get_rect(bottomleft=(10, 822))
 
     if rules_surface_rect.collidepoint(pygame.mouse.get_pos()):
-        rules_colour = "Grey"
+        rules_colour = (120, 81, 40)
 
     else:
         rules_colour = "White"
@@ -42,6 +42,7 @@ def display_game_over(winner):
 
     game_over_text_font = pygame.font.SysFont("erasdemiitc", 70)
     winner_text_font = pygame.font.SysFont("erasdemiitc", 40)
+    play_again_font = pygame.font.SysFont("erasdemiitc", 30)
 
     game_surf = game_over_text_font.render("GAME", True, (254, 176, 101))
     game_rect = game_surf.get_rect(center=(368, 350))
@@ -49,12 +50,20 @@ def display_game_over(winner):
     over_surf = game_over_text_font.render("OVER", True, (254, 176, 101))
     over_rect = over_surf.get_rect(center=(368, 415))
 
+    play_again_1_surf = play_again_font.render("Press Space", True, (254, 176, 101))
+    play_again_rect_1 = play_again_1_surf.get_rect(center=(368, 465))
+
+    play_again_2_surf = play_again_font.render("to play again", True, (254, 176, 101))
+    play_again_2_rect = play_again_2_surf.get_rect(center=(368, 495))
+
     winner_surf = winner_text_font.render(f"{winner} Won!", True, (254, 176, 101))
     winner_rect = winner_surf.get_rect(center=(368, 480))
 
     screen.blit(game_surf, game_rect)
     screen.blit(over_surf, over_rect)
     screen.blit(winner_surf, winner_rect)
+    screen.blit(play_again_1_surf, play_again_rect_1)
+    screen.blit(play_again_2_surf, play_again_2_rect)
 
 
 def display_turn_information(player, phase):
@@ -66,18 +75,22 @@ def display_turn_information(player, phase):
 
     if phase == 0:
         phase_info = "take a piece."
+        phase_info_2 = ""
 
     else:
-        phase_info = "take a piece, stack a piece or pass."
+        phase_info = "take a piece,"
+        phase_info_2 = "stack a piece or pass."
 
     player_text_font = pygame.font.Font(None, 30)
     player_text_surf = player_text_font.render(f"{player_name} to move,", True, "White")
 
     phase_info_font = pygame.font.Font(None, 18)
     phase_info_surf = phase_info_font.render(f"You can {phase_info}", True, "White") # TODO Check if take, stack are possible
+    phase_info_2_surf = phase_info_font.render(phase_info_2, True, "White")
 
     screen.blit(player_text_surf, (15, 55))
     screen.blit(phase_info_surf, (15, 80))
+    screen.blit(phase_info_2_surf, (15, 93))
 
 
 def display_pass(phase, player, m_down_pos):
@@ -86,10 +99,10 @@ def display_pass(phase, player, m_down_pos):
         pass_colour = "White"
 
         pass_font_surf = pass_font.render("PASS", True, pass_colour)
-        pass_surface_rect = pass_font_surf.get_rect(topright=(681, 55))
+        pass_surface_rect = pass_font_surf.get_rect(topright=(726, 8))  # (681, 55) (10, 822) (736, 826)
 
         if pass_surface_rect.collidepoint(pygame.mouse.get_pos()):
-            pass_colour = "Grey"
+            pass_colour = (120, 81, 40)
 
         else:
             pass_colour = "White"
@@ -229,6 +242,9 @@ while True:
 
             else:
                 display_game_over(winner_colour)
+
+    display_game_over(None)
+
 
     pygame.display.update()
     clock.tick(60)
