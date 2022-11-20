@@ -36,7 +36,7 @@ def display_rules(m_down_pos):
         webbrowser.open(r"https://www.boardspace.net/tzaar/english/rules.htm")
 
 
-def display_game_over(winner):
+def display_game_over(winner, time):
     pygame.draw.rect(screen, (119, 77, 37), (218, 288, 300, 250))
     pygame.draw.rect(screen, (167, 122, 68), (218, 288, 300, 250), 10)
 
@@ -61,9 +61,13 @@ def display_game_over(winner):
 
     screen.blit(game_surf, game_rect)
     screen.blit(over_surf, over_rect)
-    screen.blit(winner_surf, winner_rect)
-    screen.blit(play_again_1_surf, play_again_rect_1)
-    screen.blit(play_again_2_surf, play_again_2_rect)
+
+    if time % 1500 < 750:
+        screen.blit(winner_surf, winner_rect)
+
+    else:
+        screen.blit(play_again_1_surf, play_again_rect_1)
+        screen.blit(play_again_2_surf, play_again_2_rect)
 
 
 def display_turn_information(player, phase):
@@ -241,10 +245,10 @@ while True:
                             winner_colour = "White" if winner == 0 else "Black"
 
             else:
-                display_game_over(winner_colour)
+                time = pygame.time.get_ticks()
+                display_game_over(winner_colour, time)
 
-    display_game_over(None)
-
+    #display_game_over(None)
 
     pygame.display.update()
     clock.tick(60)
