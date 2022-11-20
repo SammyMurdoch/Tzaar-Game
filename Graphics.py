@@ -3,8 +3,6 @@ import pygame.gfxdraw
 from sys import exit
 from main import *
 
-print(pygame.font.get_fonts())
-
 
 def display_stack_height(board, node):
     stack_height_font = pygame.font.Font(None, 35)
@@ -30,7 +28,6 @@ def display_game_over(winner):
     over_rect = over_surf.get_rect(center=(368, 415))
 
     winner_surf = winner_text_font.render(f"{winner} Won!", True, (254, 176, 101))
-    print(winner)
     winner_rect = winner_surf.get_rect(center=(368, 480))
 
     screen.blit(game_surf, game_rect)
