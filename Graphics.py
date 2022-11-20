@@ -53,7 +53,7 @@ def display_game_over(winner, time):
     play_again_1_surf = play_again_font.render("Press Space", True, (254, 176, 101))
     play_again_rect_1 = play_again_1_surf.get_rect(center=(368, 465))
 
-    play_again_2_surf = play_again_font.render("to play again", True, (254, 176, 101))
+    play_again_2_surf = play_again_font.render("To Play Again.", True, (254, 176, 101))
     play_again_2_rect = play_again_2_surf.get_rect(center=(368, 495))
 
     winner_surf = winner_text_font.render(f"{winner} Won!", True, (254, 176, 101))
@@ -62,7 +62,7 @@ def display_game_over(winner, time):
     screen.blit(game_surf, game_rect)
     screen.blit(over_surf, over_rect)
 
-    if time % 1500 < 750:
+    if time % 1750 < 875:
         screen.blit(winner_surf, winner_rect)
 
     else:
@@ -244,8 +244,10 @@ while True:
 
                             winner_colour = "White" if winner == 0 else "Black"
 
+                            start_time = pygame.time.get_ticks()
+
             else:
-                time = pygame.time.get_ticks()
+                time = pygame.time.get_ticks() - start_time
                 display_game_over(winner_colour, time)
 
     pygame.display.update()
