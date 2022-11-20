@@ -1,7 +1,6 @@
 import pygame
 import pygame.gfxdraw
 from sys import exit
-import numpy as np
 from main import *
 
 print(pygame.font.get_fonts())
@@ -128,6 +127,7 @@ player = 0
 phase = 0
 
 winner = None
+winner_colour = None
 
 first_turn = True
 
@@ -139,7 +139,7 @@ while True:
             pygame.quit()
             exit()
 
-        if ev.type == pygame.KEYDOWN:
+        if ev.type == pygame.KEYDOWN: #TODO make this a restart at the end of the game
             if ev.key == pygame.K_SPACE:
                 piece_data = piece_data_fixed.copy()
 
@@ -171,6 +171,7 @@ while True:
 
                     elif node not in valid_move_nodes: # TODO Change this to anywhere on the board other than valid nodes
                         #TODO if you click on a piece which is yours and you can't move to set that as first piece selected
+
                         selected_nodes[0] = None
                         valid_move_nodes = []
 
