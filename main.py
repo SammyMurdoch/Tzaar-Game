@@ -2,57 +2,37 @@ import random
 import numpy as np
 
 
-def generate_connections(node, nodes, s): #TODO this seems not to work for nodes like (8, 4)
-    #directions = [(-1, -1), (-1, 0), (0, 1), (1, 1), (1, 0), (0, -1)]  # TODO Make this upper_directions
-
-    #TODO CHECK RESULT IS IN NODES
-
+def generate_connections(node, nodes, s):
     connections = [None, None, None, None, None, None]
 
     if node[0] <= s-1:
         connections[0] = (node[0] - 1, node[1] - 1)
         connections[1] = (node[0] - 1, node[1])
-        # connections.append((node[0] - 1, node[1] - 1)) #d0
-        # connections.append((node[0] - 1, node[1])) #d1
 
     else:
         connections[0] = (node[0] - 1, node[1])
         connections[1] = (node[0] - 1, node[1] + 1)
-        # connections.append((node[0] - 1, node[1])) #d0
-        # connections.append((node[0] - 1, node[1] + 1)) #d1
 
     connections[2] = (node[0], node[1] + 1)
-    # connections.append((node[0], node[1] + 1)) #d2
 
     if node[0] < s-1:
         connections[3] = (node[0] + 1, node[1] + 1)
         connections[4] = (node[0] + 1, node[1])
-        # connections.append((node[0] + 1, node[1] + 1)) #d3
-        # connections.append((node[0] + 1, node[1])) #d4
 
     else:
         connections[3] = (node[0] + 1, node[1])
         connections[4] = (node[0] + 1, node[1] - 1)
-        # connections.append((node[0] - 1, node[1])) #d3
-        # connections.append((node[0] + 1, node[1] - 1)) #d4
 
     connections[5] = (node[0], node[1] - 1)
-    #connections.append((node[0], node[1] - 1)) #d5
 
     for i, connection in enumerate(connections[:]):
         if connection not in nodes:
             connections[i] = None
 
-    #(0, 0)[(-1, -1), (-1, 0), (0, 1), (1, 1), (1, 0), (0, -1)]
-    #(0, 0) [(-1, 0), (0, 1), (1, 1), (1, 0)]
+    return connections
 
 
-    #connections = [(node[0] + dir[0], node[1] + dir[1]) if (node[0] + dir[0], node[1] + dir[1]) in nodes else None for dir in directions]
-
-    return connections #TODO probobly have to have None is the place of bad directions
-
-
-def generate_board_dict(piece_data, directions, side_length=5, centre=(368, 414), s=5, d=84.75):
+def generate_board_dict(piece_data, side_length=5, centre=(368, 414), s=5, d=84.75):
     max_row_length = 2 * side_length - 1
 
     board_keys = [(x, y) for x in range(max_row_length) for y in range(max_row_length - abs(x-side_length+1))]
@@ -94,14 +74,14 @@ def stack_piece(start, end, nodes, neighbours, piece_data):
     return nodes, neighbours, piece_data
 
 
-def get_valid_target_nodes(board, neighbours, node, target_colour, phase): # TODO check for stack height
+def get_valid_target_nodes(board, neighbours, node, target_colour, phase):
     valid_moves = []
 
     if board[node][0] is not None:
         for neighbour in neighbours[node]:
             if neighbour is not None:
                 if phase == 0:
-                    if board[neighbour][0][1] == target_colour: #TODO things seem to be appending to neighbour nodes by mistake
+                    if board[neighbour][0][1] == target_colour:
                         if board[node][1] >= board[neighbour][1]: #TODO this seems inefficient
                             valid_moves.append(neighbour)
 
@@ -160,8 +140,3 @@ piece_data_fixed = {("W-Tzaar", 0, "Pieces/white_tzaar.png"): 6,
               ("B-Tzaar", 1, "Pieces/black_tzaar.png"): 6,
               ("B-Tzaara", 1, "Pieces/black_tzaara.png"): 9,
               ("B-Tott", 1, "Pieces/black_tott.png"): 15}
-
-piece_data = piece_data_fixed.copy()
-
-directions = [(-1, -1), (-1, 0), (0, 1), (1, 1), (1, 0), (0, -1)] #TODO Make this upper_directions
-lower_directions = [(-1, 0), (-1, 1), (0, 1), (1, 0), (1, -1), (0, -1)]

@@ -30,6 +30,7 @@ def display_game_over(winner):
     over_rect = over_surf.get_rect(center=(368, 415))
 
     winner_surf = winner_text_font.render(f"{winner} Won!", True, (254, 176, 101))
+    print(winner)
     winner_rect = winner_surf.get_rect(center=(368, 480))
 
     screen.blit(game_surf, game_rect)
@@ -113,12 +114,14 @@ pygame.display.set_caption("TZAAR")
 
 clock = pygame.time.Clock()
 
+piece_data = piece_data_fixed.copy()
+
 board_surf = pygame.image.load("Board.jpg").convert_alpha()
 
 piece_surfs = {piece_type[0]: pygame.image.load(piece_type[2]).convert_alpha() for piece_type in piece_data.keys()}
 piece_rects = {piece_type: piece_surfs[piece_type].get_rect() for piece_type in piece_surfs.keys()}
 
-board, neighbours = generate_board_dict(piece_data, directions)
+board, neighbours = generate_board_dict(piece_data)
 
 selected_nodes = [None, None]
 valid_move_nodes = []
@@ -139,11 +142,23 @@ while True:
             pygame.quit()
             exit()
 
-        if ev.type == pygame.KEYDOWN: #TODO make this a restart at the end of the game
+        if ev.type == pygame.KEYDOWN:  # TODO make this a restart at the end of the game
             if ev.key == pygame.K_SPACE:
-                piece_data = piece_data_fixed.copy()
+                if winner is not None:
+                    piece_data = piece_data_fixed.copy()
 
-                board, neighbours = generate_board_dict(piece_data, directions)
+                    board, neighbours = generate_board_dict(piece_data)
+
+                    selected_nodes = [None, None]
+                    valid_move_nodes = []
+
+                    player = 0
+                    phase = 0
+
+                    winner = None
+                    winner_colour = None
+
+                    first_turn = True
 
         if ev.type == pygame.MOUSEBUTTONDOWN:
             m_pos = pygame.mouse.get_pos()
@@ -169,8 +184,9 @@ while True:
 
                         valid_move_nodes = get_valid_target_nodes(board, neighbours, node, (player + 1) % 2, phase)
 
-                    elif node not in valid_move_nodes: # TODO Change this to anywhere on the board other than valid nodes
-                        #TODO if you click on a piece which is yours and you can't move to set that as first piece selected
+                    elif node not in valid_move_nodes:
+                        # TODO Change this to anywhere on the board other than valid nodes
+                        # TODO if you click on a piece which is yours and you can't move to set that as first piece selected
 
                         selected_nodes[0] = None
                         valid_move_nodes = []
