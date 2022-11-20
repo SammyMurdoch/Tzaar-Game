@@ -4,6 +4,8 @@ from sys import exit
 import numpy as np
 from main import *
 
+print(pygame.font.get_fonts())
+
 
 def display_stack_height(board, node):
     stack_height_font = pygame.font.Font(None, 35)
@@ -13,6 +15,27 @@ def display_stack_height(board, node):
     stack_height_rect = stack_height_surf.get_rect(center=board[node][2])
 
     screen.blit(stack_height_surf, stack_height_rect)
+
+
+def display_game_over(winner):
+    pygame.draw.rect(screen, (119, 77, 37), (218, 288, 300, 250))
+    pygame.draw.rect(screen, (167, 122, 68), (218, 288, 300, 250), 10)
+
+    game_over_text_font = pygame.font.SysFont("erasdemiitc", 70)
+    winner_text_font = pygame.font.SysFont("erasdemiitc", 50)
+
+    game_surf = game_over_text_font.render("Game", True, (254, 176, 101))
+    game_rect = game_surf.get_rect(center=(368, 350))
+
+    over_surf = game_over_text_font.render("Over", True, (254, 176, 101))
+    over_rect = over_surf.get_rect(center=(368, 415))
+
+    winner_surf = winner_text_font.render(f"{winner} Won!", True, (254, 176, 101))
+    winner_rect = winner_surf.get_rect(center=(368, 480))
+
+    screen.blit(game_surf, game_rect)
+    screen.blit(over_surf, over_rect)
+    screen.blit(winner_surf, winner_rect)
 
 
 def display_turn_information(player, phase):
@@ -178,6 +201,11 @@ while True:
                                     winner = player
 
                                 print(f"Player {player} won.")
+
+                                phase = 0
+
+            else:
+                display_game_over(winner)
 
     pygame.display.update()
     clock.tick(60)

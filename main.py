@@ -164,5 +164,3 @@ piece_data = piece_data_fixed.copy()
 
 directions = [(-1, -1), (-1, 0), (0, 1), (1, 1), (1, 0), (0, -1)] #TODO Make this upper_directions
 lower_directions = [(-1, 0), (-1, 1), (0, 1), (1, 0), (1, -1), (0, -1)]
-
-#game(piece_data, directions)
