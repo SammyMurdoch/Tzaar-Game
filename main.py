@@ -124,14 +124,15 @@ def check_take_possible(board, neighbours, player):
     return False
 
 
-def check_game_end(board, neighbours, piece_data, player): # TODO test this
-    if 0 in piece_data.values():
-        return True
+def check_game_end(board, neighbours, piece_data, player):
+    for piece in piece_data:
+        if piece_data[piece] == 0:
+            return True, (piece[1] + 1) % 2
 
-    elif not check_take_possible(board, neighbours, player):
-        return True
+    if not check_take_possible(board, neighbours, player):
+        return True, (player + 1) % 2
 
-    return False
+    return False, None
 
 
 def generate_node_coordinate_array_upper(nodes, d, s):

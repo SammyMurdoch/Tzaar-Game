@@ -22,12 +22,12 @@ def display_game_over(winner):
     pygame.draw.rect(screen, (167, 122, 68), (218, 288, 300, 250), 10)
 
     game_over_text_font = pygame.font.SysFont("erasdemiitc", 70)
-    winner_text_font = pygame.font.SysFont("erasdemiitc", 50)
+    winner_text_font = pygame.font.SysFont("erasdemiitc", 0)
 
-    game_surf = game_over_text_font.render("Game", True, (254, 176, 101))
+    game_surf = game_over_text_font.render("GAME", True, (254, 176, 101))
     game_rect = game_surf.get_rect(center=(368, 350))
 
-    over_surf = game_over_text_font.render("Over", True, (254, 176, 101))
+    over_surf = game_over_text_font.render("OVER", True, (254, 176, 101))
     over_rect = over_surf.get_rect(center=(368, 415))
 
     winner_surf = winner_text_font.render(f"{winner} Won!", True, (254, 176, 101))
@@ -150,8 +150,9 @@ while True:
 
     screen.blit(board_surf, (0, 0))
 
-    phase, player = display_pass(phase, player, m_pos)
-    display_turn_information(player, phase)
+    if winner is None:
+        phase, player = display_pass(phase, player, m_pos)
+        display_turn_information(player, phase)
 
     for node in board:
         if board[node][0] is not None:
@@ -193,19 +194,12 @@ while True:
                         else:
                             phase, player = update_phase_player(phase, player)
 
-                            if check_game_end(board, neighbours, piece_data, player):
-                                if phase == 0:
-                                    winner = (player + 1) % 2
+                            end_game, winner = check_game_end(board, neighbours, piece_data, player)
 
-                                if phase == 1:
-                                    winner = player
-
-                                print(f"Player {player} won.")
-
-                                phase = 0
+                            winner_colour = "White" if winner == 0 else "Black"
 
             else:
-                display_game_over(winner)
+                display_game_over(winner_colour)
 
     pygame.display.update()
     clock.tick(60)
