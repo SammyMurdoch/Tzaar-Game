@@ -248,7 +248,5 @@ while True:
                 time = pygame.time.get_ticks()
                 display_game_over(winner_colour, time)
 
-    #display_game_over(None)
-
     pygame.display.update()
     clock.tick(60)
