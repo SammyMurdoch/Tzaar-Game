@@ -169,7 +169,7 @@ while True:
             pygame.quit()
             exit()
 
-        if ev.type == pygame.KEYDOWN:  # TODO make this a restart at the end of the game
+        if ev.type == pygame.KEYDOWN:
             if ev.key == pygame.K_SPACE:
                 if winner is not None:
                     piece_data = piece_data_fixed.copy()
